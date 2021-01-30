@@ -10,8 +10,8 @@ import InMemory from '../backend/InMemory';
 import IndexedDB from '../backend/IndexedDB';
 // import LocalStorage from '../backend/LocalStorage';
 import MountableFileSystem from '../backend/MountableFileSystem';
-// import OverlayFS from '../backend/OverlayFS';
-// import WorkerFS from '../backend/WorkerFS';
+import OverlayFS from '../backend/OverlayFS';
+import WorkerFS from '../backend/WorkerFS';
 import HTTPRequest from '../backend/HTTPRequest';
 // import ZipFS from '../backend/ZipFS';
 // import IsoFS from '../backend/IsoFS';
@@ -31,8 +31,8 @@ const Backends = {
   // IsoFS,
   // LocalStorage,
   MountableFileSystem,
-  // OverlayFS,
-  // WorkerFS,
+  OverlayFS,
+  WorkerFS,
   HTTPRequest,
   // XmlHttpRequest: HTTPRequest,
   // ZipFS
