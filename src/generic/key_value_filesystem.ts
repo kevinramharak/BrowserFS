@@ -483,6 +483,9 @@ export class SyncKeyValueFileSystem extends SynchronousFileSystem {
   public mkdirSync(p: string, mode: number): void {
     const tx = this.store.beginTransaction('readwrite'),
       data = Buffer.from('{}');
+    if (p === '.') {
+      p = process.cwd();
+    }
     this.commitNewFile(tx, p, FileType.DIRECTORY, mode, data);
   }
 
@@ -550,9 +553,6 @@ export class SyncKeyValueFileSystem extends SynchronousFileSystem {
         throw ApiError.ENOENT(path.resolve(parent, filename));
       }
     };
-    if (parent === '.') {
-      parent = process.cwd();
-    }
     if (parent === '/') {
       if (filename === '') {
         // BASE CASE #1: Return the root's ID.
@@ -574,7 +574,9 @@ export class SyncKeyValueFileSystem extends SynchronousFileSystem {
    * @todo memoize/cache
    */
   private findINode(tx: SyncKeyValueROTransaction, p: string): Inode {
-    return this.getINode(tx, p, this._findINode(tx, path.dirname(p), path.basename(p)));
+    const parent = path.dirname(p);
+    const filename = path.basename(p);
+    return this.getINode(tx, p, this._findINode(tx, parent, filename));
   }
 
   /**
