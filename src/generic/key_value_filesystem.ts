@@ -4,6 +4,7 @@ import {default as Stats, FileType} from '../core/node_fs_stats';
 import {File} from '../core/file';
 import {FileFlag} from '../core/file_flag';
 import * as path from 'path';
+import * as process from 'process';
 import Inode from '../generic/inode';
 import PreloadFile from '../generic/preload_file';
 import {emptyBuffer} from '../core/util';
@@ -549,6 +550,9 @@ export class SyncKeyValueFileSystem extends SynchronousFileSystem {
         throw ApiError.ENOENT(path.resolve(parent, filename));
       }
     };
+    if (parent === '.') {
+      parent = process.cwd();
+    }
     if (parent === '/') {
       if (filename === '') {
         // BASE CASE #1: Return the root's ID.
@@ -558,8 +562,8 @@ export class SyncKeyValueFileSystem extends SynchronousFileSystem {
         return readDirectory(this.getINode(tx, parent, ROOT_NODE_ID));
       }
     } else {
-      return readDirectory(this.getINode(tx, parent + path.sep + filename,
-        this._findINode(tx, path.dirname(parent), path.basename(parent))));
+        return readDirectory(this.getINode(tx, parent + path.sep + filename,
+          this._findINode(tx, path.dirname(parent), path.basename(parent))));
     }
   }
 

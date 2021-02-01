@@ -147,20 +147,20 @@ export function getFileSystem(config: FileSystemConfiguration, cb: BFSCallback<F
     let finishedIterating = false;
     const props = Object.keys(options).filter((k) => k !== 'fs');
     // Check recursively if other fields have 'fs' properties.
-    props.forEach((p) => {
-      const d = options[p];
-      if (d !== null && typeof(d) === "object" && d['fs']) {
+    props.forEach((key) => {
+      const value = options[key];
+      if (value !== null && typeof(value) === "object" && value['fs']) {
         waitCount++;
-        getFileSystem(d, function(e, fs?) {
+        getFileSystem(value, function(error, fs?) {
           waitCount--;
-          if (e) {
+          if (error) {
             if (called) {
               return;
             }
             called = true;
-            cb(e);
+            cb(error);
           } else {
-            options[p] = fs;
+            options[key] = fs;
             if (waitCount === 0 && finishedIterating) {
               finish();
             }
